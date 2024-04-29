@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +14,17 @@
             margin: auto;
             width: 90%;
         }
+        .github-icon {
+            font-size: 24px;
+            margin-right: 5px;
+        }
+        .github-link {
+            color: #000;
+        }
+        .footer-text {
+            font-size: 15px;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -21,7 +32,7 @@
         <h2 class="text-center mt-5">성적 계산기</h2>
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
-                <table class="table table-bordered mt-3">
+                <table class="table table-centered mt-3">
                     <thead>
                         <tr>
                             <th colspan="2">입력</th>
@@ -35,7 +46,6 @@
                             </td>
                             <td>
                                 <input type="number" id="students" class="form-control" required>
-                                
                             </td>
                         </tr>
                         <tr>
@@ -68,7 +78,7 @@
                     </tbody>
                 </table>
                 <button onclick="calculate()" class="btn btn-primary mb-3">계산</button>
-                <table class="table table-bordered table-centered">
+                <table class="table table-centered">
                     <thead>
                         <tr>
                             <th colspan="3">결과</th>
@@ -95,6 +105,15 @@
         </div>
     </div>
 
+    <!-- GitHub Icon and Link -->
+    <div class="container-fluid bg-light text-center py-3 fixed-bottom">
+        <p class="footer-text">★ 최강소웨 21학번 파이팅 ★</p>
+        <a href="https://github.com/ssogari-dev/gradeCalc/" class="github-link">
+            <i class="fab fa-github github-icon"></i>
+        </a>
+    </div>
+
+    <!-- JavaScript and Bootstrap JS -->
     <script>
         function calculate() {
             var students = document.getElementById("students").value;
@@ -156,7 +175,7 @@
     </script>
     <!-- Bootstrap JS 및 의존성 추가 -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384"></script>
 </body>
 </html>
