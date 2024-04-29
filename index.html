@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Score Calculator</title>
+    <!-- Bootstrap CSS 추가 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- FontAwesome 추가 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center mt-5">성적 계산기</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <table class="table centered mt-3">
+                    <thead>
+                        <tr>
+                            <th colspan="2">입력</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                학생 수
+                                <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="카카오워크 기준 전체 인원에서 2를 빼고, 사이버캠퍼스상 교수+조교 인원을 빼십시오."></i>
+                            </td>
+                            <td>
+                                <input type="number" id="students" class="form-control" required>
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                원점수
+                                <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="본인이 획득한 점수를 입력하십시오."></i>
+                            </td>
+                            <td>
+                                <input type="number" id="rawScore" class="form-control" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                평균
+                                <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="AVG 또는 Average로 표시되어 있을 수도 있습니다."></i>
+                            </td>
+                            <td>
+                                <input type="number" id="mean" class="form-control" step="any" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                표준편차
+                                <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="Std 또는 Stddev 등으로 표시되어 있을 수도 있습니다."></i>
+                            </td>
+                            <td>
+                                <input type="number" id="stdDev" class="form-control" step="any" required>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button onclick="calculate()" class="btn btn-primary mb-3">계산</button>
+                <table class="table centered">
+                    <thead>
+                        <tr>
+                            <th colspan="3">결과</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>백분위:</td>
+                            <td id="percentile" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>등수:</td>
+                            <td id="rank"></td>
+                            <td>
+                                예상동점자
+                                <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="예상동점자는 본인을 제외한 동일 득점자입니다. 내가 획득한 원점수보다 1점 높은 인원의 예상 등수에서 차감하여 계산합니다."></i>
+                                :
+                            </td>
+                            <td id="expectedTies"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            var students = document.getElementById("students").value;
+            var rawScore = document.getElementById("rawScore").value;
+            var scoreUp = parseInt(rawScore) + 1;
+            var mean = document.getElementById("mean").value;
+            var stdDev = document.getElementById("stdDev").value;
+
+            if (students === "" || rawScore === "" || mean === "" || stdDev === "") {
+                showAlert();
+                return;
+            }
+
+            var percentile = 1 - normDist(rawScore, mean, stdDev, true);
+            var rank = Math.round(percentile * students);
+            var expectedTies = rank - Math.round((1 - normDist(scoreUp, mean, stdDev, true)) * students);
+
+            document.getElementById("percentile").innerHTML = (percentile * 100).toFixed(2) + "%";
+            document.getElementById("rank").innerHTML = rank;
+            document.getElementById("expectedTies").innerHTML = expectedTies + "명";
+        }
+
+        function normDist(x, mean, stdDev, cumulative) {
+            var z = (x - mean) / stdDev;
+            if (cumulative) {
+                var t = 1 / (1 + 0.2316419 * Math.abs(z));
+                var a1 = 0.31938153;
+                var a2 = -0.356563782;
+                var a3 = 1.781477937;
+                var a4 = -1.821255978;
+                var a5 = 1.330274429;
+                var m = 1 - (1 / (Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * z * z) *
+                    (a1 * t + a2 * t * t + a3 * Math.pow(t, 3) + a4 * Math.pow(t, 4) + a5 * Math.pow(t, 5)));
+                if (z < 0) {
+                    return 1 - m;
+                } else {
+                    return m;
+                }
+            } else {
+                return 1 / (Math.sqrt(2 * Math.PI) * stdDev) * Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2));
+            }
+        }
+
+        function showAlert() {
+            var alertDiv = document.createElement("div");
+            alertDiv.classList.add("alert", "alert-danger");
+            alertDiv.setAttribute("role", "alert");
+            alertDiv.innerText = "모든 필드를 입력해주세요.";
+            document.body.insertBefore(alertDiv, document.body.firstChild);
+            setTimeout(function() {
+                alertDiv.remove();
+            }, 3000);
+        }
+
+        // Bootstrap의 tooltip 초기화
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+    <!-- Bootstrap JS 및 의존성 추가 -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
