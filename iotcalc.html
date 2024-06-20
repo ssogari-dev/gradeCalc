@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Identifier Number Calculation</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      padding-top: 50px;
+    }
+    .result {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header">
+            <h3>Identifier Number Calculation</h3>
+          </div>
+          <div class="card-body">
+            <form id="numberForm">
+              <div class="form-group">
+                <label for="numberInput">학번 9자리를 입력해주세요:</label>
+                <input type="text" class="form-control" id="numberInput" maxlength="9" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Calculate</button>
+            </form>
+            <div class="result">
+              <h4>Result:</h4>
+              <p id="resultText"></p>
+            </div>
+            <div class="calculation-process">
+              <h4>Calculation Process:</h4>
+              <p id="calculationProcessText"></p>
+            </div>
+            <div class="calculation-rules">
+              <h4>Calculation Rules:</h4>
+              <p>4번째 숫자 + 5번째 숫자 + 9번째 숫자 + (5번째 숫자 * 8000) + (6번째 숫자 * 400) + (7번째 숫자 * 20)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('numberForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const number = document.getElementById('numberInput').value;
+
+      if (number.length !== 9 || isNaN(number)) {
+        alert('Please enter a valid 9-digit number.');
+        return;
+      }
+
+      const digits = number.split('').map(Number);
+      const fourthDigit = digits[3];
+      const fifthDigit = digits[4];
+      const sixthDigit = digits[5];
+      const seventhDigit = digits[6];
+      const ninthDigit = digits[8];
+      const result = fourthDigit + fifthDigit + ninthDigit + (fifthDigit * 8000) + (sixthDigit * 400) + (seventhDigit * 20);
+
+      const calculationProcess = `
+        4번째 숫자: ${fourthDigit} <br>
+        5번째 숫자: ${fifthDigit} <br>
+        9번째 숫자: ${ninthDigit} <br>
+        (5번째 숫자 * 8000): ${fifthDigit} * 8000 = ${fifthDigit * 8000} <br>
+        (6번째 숫자 * 400): ${sixthDigit} * 400 = ${sixthDigit * 400} <br>
+        (7번째 숫자 * 20): ${seventhDigit} * 20 = ${seventhDigit * 20} <br>
+        최종 결과: ${result}
+      `;
+
+      document.getElementById('resultText').innerText = result;
+      document.getElementById('calculationProcessText').innerHTML = calculationProcess;
+    });
+  </script>
+</body>
+</html>
