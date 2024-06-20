@@ -60,19 +60,20 @@
 
       const digits = number.split('').map(Number);
       const fourthDigit = digits[3];
-      const fifthDigit = digits[5];
-      const sixthDigit = digits[6];
-      const seventhDigit = digits[7];
+      const fifthDigit = digits[4];
+      const sixthDigit = digits[5];
+      const seventhDigit = digits[6];
+      const eighthDigit = digits[7];
       const ninthDigit = digits[8];
-      const result = fourthDigit + fifthDigit + ninthDigit + (fifthDigit * 8000) + (sixthDigit * 400) + (seventhDigit * 20);
+      const result = fourthDigit + fifthDigit + ninthDigit + (sixthDigit * 8000) + (seventhDigit * 400) + (eighthDigit * 20);
 
       const calculationProcess = `
         4번째 숫자: ${fourthDigit} <br>
         5번째 숫자: ${fifthDigit} <br>
         9번째 숫자: ${ninthDigit} <br>
-        (6번째 숫자 * 8000): ${fifthDigit} * 8000 = ${fifthDigit * 8000} <br>
-        (7번째 숫자 * 400): ${sixthDigit} * 400 = ${sixthDigit * 400} <br>
-        (8번째 숫자 * 20): ${seventhDigit} * 20 = ${seventhDigit * 20} <br>
+        (6번째 숫자 * 8000): ${sixthDigit} * 8000 = ${sixthDigit * 8000} <br>
+        (7번째 숫자 * 400): ${seventhDigit} * 400 = ${seventhDigit * 400} <br>
+        (8번째 숫자 * 20): ${eighthDigit} * 20 = ${eighthDigit * 20} <br>
         최종 결과: ${result}
       `;
 
