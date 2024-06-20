@@ -40,7 +40,7 @@
             </div>
             <div class="calculation-rules">
               <h4>Calculation Rules:</h4>
-              <p>4번째 숫자 + 5번째 숫자 + 9번째 숫자 + (5번째 숫자 * 8000) + (6번째 숫자 * 400) + (7번째 숫자 * 20)</p>
+              <p>4번째 숫자 + 5번째 숫자 + 9번째 숫자 + (6번째 숫자 * 8000) + (7번째 숫자 * 400) + (8번째 숫자 * 20)</p>
             </div>
           </div>
         </div>
@@ -60,9 +60,9 @@
 
       const digits = number.split('').map(Number);
       const fourthDigit = digits[3];
-      const fifthDigit = digits[4];
-      const sixthDigit = digits[5];
-      const seventhDigit = digits[6];
+      const fifthDigit = digits[5];
+      const sixthDigit = digits[6];
+      const seventhDigit = digits[7];
       const ninthDigit = digits[8];
       const result = fourthDigit + fifthDigit + ninthDigit + (fifthDigit * 8000) + (sixthDigit * 400) + (seventhDigit * 20);
 
@@ -70,9 +70,9 @@
         4번째 숫자: ${fourthDigit} <br>
         5번째 숫자: ${fifthDigit} <br>
         9번째 숫자: ${ninthDigit} <br>
-        (5번째 숫자 * 8000): ${fifthDigit} * 8000 = ${fifthDigit * 8000} <br>
-        (6번째 숫자 * 400): ${sixthDigit} * 400 = ${sixthDigit * 400} <br>
-        (7번째 숫자 * 20): ${seventhDigit} * 20 = ${seventhDigit * 20} <br>
+        (6번째 숫자 * 8000): ${fifthDigit} * 8000 = ${fifthDigit * 8000} <br>
+        (7번째 숫자 * 400): ${sixthDigit} * 400 = ${sixthDigit * 400} <br>
+        (8번째 숫자 * 20): ${seventhDigit} * 20 = ${seventhDigit * 20} <br>
         최종 결과: ${result}
       `;
 
