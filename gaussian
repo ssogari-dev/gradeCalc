@@ -4,6 +4,7 @@
     <title>Gaussian Elimination Solver</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
       body {
         font-family: "Arial", sans-serif;
@@ -122,7 +123,25 @@
         margin: 15px 0;
       }
 
-@media (max-width: 600px) {
+      .footer {
+        text-align: center;
+        margin-top: 40px;
+        padding: 20px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .footer .icons {
+        margin-top: 10px;
+      }
+      .footer .icons a {
+        margin: 0 10px;
+        color: #000;
+        text-decoration: none;
+        font-size: 1.5em;
+      }
+
+      @media (max-width: 600px) {
         .button-group {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
@@ -191,8 +210,19 @@
 
       <div id="stepDisplay" class="fade"></div>
     </div>
+    <div class="container footer">
+      <p style="font-style: italic; color: #555555;">★ 가천대학교 AI·소프트웨어학부 21학번 파이팅 ★</p>
+      <div class="icons">
+        <a href="mailto:admin@ssogari.dev"><i class="fas fa-envelope"></i></a>
+        <a href="https://github.com/ssogari-dev/gradeCalc"><i class="fab fa-github"></i></a>
+        <a href="https://www.gachon.ac.kr/"><i class="fas fa-school"></i></a>
+      </div>
+    </div>
+
 
     <div id="popup" class="popup"></div>
+
+
 
     <script>
       const terms = {
