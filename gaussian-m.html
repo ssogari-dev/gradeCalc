@@ -212,26 +212,36 @@
       }
 
       function showPopup(event) {
-        const term = event.target.dataset.term;
-        const popup = document.getElementById("popup");
-        popup.innerHTML = terms[term];
-        popup.style.display = "block";
+  const term = event.target.dataset.term;
+  const popup = document.getElementById("popup");
+  popup.innerHTML = terms[term];
+  popup.style.display = "block";
 
-        const rect = event.target.getBoundingClientRect();
-        popup.style.left = `${window.scrollX + rect.left}px`;
-        popup.style.top = `${window.scrollY + rect.bottom + 5}px`;
-      }
+  // 마우스의 현재 위치를 사용하여 팝업 위치 설정
+  const mouseX = event.clientX;
+  const mouseY = event.clientY;
 
-      function hidePopup() {
-        document.getElementById("popup").style.display = "none";
-      }
+  // 팝업이 화면 밖으로 나가지 않도록 위치 조정
+  popup.style.left = `${Math.min(mouseX + 10, window.innerWidth - popup.offsetWidth)}px`;
+  popup.style.top = `${Math.min(mouseY + 10, window.innerHeight - popup.offsetHeight)}px`;
+}
 
-      document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll(".term").forEach((element) => {
-          element.addEventListener("mouseover", showPopup);
-          element.addEventListener("mouseout", hidePopup);
-        });
-      });
+function hidePopup() {
+  document.getElementById("popup").style.display = "none";
+}
+
+document.addEventListener("mouseover", function (event) {
+  if (event.target.classList.contains("term")) {
+    showPopup(event);
+  }
+});
+
+document.addEventListener("mouseout", function (event) {
+  if (event.target.classList.contains("term")) {
+    hidePopup();
+  }
+});
+
 
       function validateInput(input) {
         if (!input.trim()) {
