@@ -4,117 +4,269 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Score Calculator</title>
-    <!-- Bootstrap CSS 추가 -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <!-- FontAwesome 추가 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        /* Custom CSS for responsive design */
-        .table-centered {
-            margin: auto;
-            width: 90%;
+        body {
+            font-family: "Arial", sans-serif;
+            max-width: 450px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
         }
-        .github-icon {
-            font-size: 24px;
-            margin-right: 5px;
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 80px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            background-color: white;
+        }
+        .table td, .table th {
+            padding: 12px;
+            vertical-align: middle;
+        }
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #4caf50;
+            color: white;
+            margin: 20px 0;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .footer {
+            background-color: white;
+            padding: 20px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            left: 0;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .footer-text {
+            margin: 5px 0;
+            color: #666;
         }
         .github-link {
             color: #000;
-        }
-        .footer-text {
-            font-size: 15px;
+            text-decoration: none;
+            font-size: 1.5em;
+            display: inline-block;
             margin-top: 5px;
+        }
+        .info-box {
+            background-color: #e7f3fe;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .info-icon {
+            color: #2196f3;
+            margin-left: 5px;
+            cursor: help;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 300px;
+            z-index: 1000;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
+    <div id="popup" class="popup"></div>
+    
     <div class="container">
-        <h2 class="text-center mt-5">성적 계산기</h2>
-        <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6">
-                <table class="table table-centered mt-3">
-                    <thead>
-                        <tr>
-                            <th colspan="2">입력</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                학생 수
-                                <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="카카오워크 기준 전체 인원에서 2를 빼고, 사이버캠퍼스상 교수+조교 인원을 빼십시오."></i>
-                            </td>
-                            <td>
-                                <input type="number" id="students" class="form-control" required>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                원점수
-                                <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="본인이 획득한 점수를 입력하십시오."></i>
-                            </td>
-                            <td>
-                                <input type="number" id="rawScore" class="form-control" required>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                평균
-                                <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="AVG 또는 Average로 표시되어 있을 수도 있습니다."></i>
-                            </td>
-                            <td>
-                                <input type="number" id="mean" class="form-control" step="any" required>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                표준편차
-                                <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="Std 또는 Stddev 등으로 표시되어 있을 수도 있습니다."></i>
-                            </td>
-                            <td>
-                                <input type="number" id="stdDev" class="form-control" step="any" required>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <button onclick="calculate()" class="btn btn-primary mb-3">계산</button>
-                <table class="table table-centered">
-                    <thead>
-                        <tr>
-                            <th colspan="3">결과</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>백분위:</td>
-                            <td id="percentile" colspan="2"></td>
-                        </tr>
-                        <tr>
-                            <td>등수:</td>
-                            <td id="rank"></td>
-                            <td>
-                                예상동점자
-                                <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="예상동점자는 본인을 제외한 동일 득점자입니다. 내가 획득한 원점수보다 1점 높은 인원의 예상 등수에서 차감하여 계산합니다."></i>
-                                :
-                            </td>
-                            <td id="expectedTies"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+        <h2 style="text-align: center; margin-bottom: 30px;">성적 계산기</h2>
 
-    <!-- GitHub Icon and Link -->
-    <div class="container-fluid bg-light text-center py-3 fixed-bottom">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th colspan="2">입력</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            학생 수
+                            <i class="fas fa-question-circle info-icon" 
+                               data-term="학생수"
+                               onmouseover="showPopup(event)" 
+                               onmouseout="hidePopup()"></i>
+                        </td>
+                        <td>
+                            <input type="number" id="students" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            원점수
+                            <i class="fas fa-question-circle info-icon" 
+                               data-term="원점수"
+                               onmouseover="showPopup(event)" 
+                               onmouseout="hidePopup()"></i>
+                        </td>
+                        <td>
+                            <input type="number" id="rawScore" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            평균
+                            <i class="fas fa-question-circle info-icon" 
+                               data-term="평균"
+                               onmouseover="showPopup(event)" 
+                               onmouseout="hidePopup()"></i>
+                        </td>
+                        <td>
+                            <input type="number" id="mean" step="any" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            표준편차
+                            <i class="fas fa-question-circle info-icon" 
+                               data-term="표준편차"
+                               onmouseover="showPopup(event)" 
+                               onmouseout="hidePopup()"></i>
+                        </td>
+                        <td>
+                            <input type="number" id="stdDev" step="any" required>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+        <div style="text-align: center;">
+            <button onclick="calculate()">계산</button>
+        </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th colspan="3">결과</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>백분위:</td>
+                        <td id="percentile" colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td>등수:</td>
+                        <td id="rank"></td>
+                        <td>
+                            예상동점자
+                            <i class="fas fa-question-circle info-icon" 
+                               data-term="예상동점자"
+                               onmouseover="showPopup(event)" 
+                               onmouseout="hidePopup()"></i>
+                            :
+                            <span id="expectedTies"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+    <footer class="footer">
         <p class="footer-text">★ 최강소웨 21학번 파이팅 ★</p>
         <a href="https://github.com/ssogari-dev/gradeCalc/" class="github-link">
-            <i class="fab fa-github github-icon"></i>
+            <i class="fab fa-github"></i>
         </a>
-    </div>
+    </footer>
 
-    <!-- JavaScript and Bootstrap JS -->
     <script>
+        const terms = {
+            '학생수': '카카오워크 기준 전체 인원에서 2를 빼고, 사이버캠퍼스상 교수+조교 인원을 빼십시오.',
+            '원점수': '본인이 획득한 점수를 입력하십시오.',
+            '평균': 'AVG 또는 Average로 표시되어 있을 수도 있습니다.',
+            '표준편차': 'Std 또는 Stddev 등으로 표시되어 있을 수도 있습니다.',
+            '예상동점자': '예상동점자는 본인을 제외한 동일 득점자입니다. 내가 획득한 원점수보다 1점 높은 인원의 예상 등수에서 차감하여 계산합니다.'
+        };
+
+        function showPopup(event) {
+            const term = event.target.dataset.term;
+            const popup = document.getElementById("popup");
+            popup.innerHTML = terms[term];
+            popup.style.display = "block";
+
+            const mouseX = event.clientX;
+            const mouseY = event.clientY;
+            
+            const popupWidth = popup.offsetWidth;
+            const popupHeight = popup.offsetHeight;
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+
+            let left = mouseX + 10;
+            if (left + popupWidth > windowWidth) {
+                left = mouseX - popupWidth - 10;
+            }
+
+            let top = mouseY + 10;
+            if (top + popupHeight > windowHeight) {
+                top = mouseY - popupHeight - 10;
+            }
+
+            popup.style.left = `${left}px`;
+            popup.style.top = `${top}px`;
+        }
+
+        function hidePopup() {
+            document.getElementById("popup").style.display = "none";
+        }
+
         function calculate() {
             var students = document.getElementById("students").value;
             var rawScore = document.getElementById("rawScore").value;
@@ -162,20 +314,11 @@
             alertDiv.classList.add("alert", "alert-danger");
             alertDiv.setAttribute("role", "alert");
             alertDiv.innerText = "모든 필드를 입력해주세요.";
-            document.body.insertBefore(alertDiv, document.body.firstChild);
+            document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.container').firstChild);
             setTimeout(function() {
                 alertDiv.remove();
             }, 3000);
         }
-
-        // Bootstrap의 tooltip 초기화
-        $(document).ready(function(){
-            $('[data-toggle="tooltip"]').tooltip();
-        });
     </script>
-    <!-- Bootstrap JS 및 의존성 추가 -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384"></script>
 </body>
 </html>
