@@ -1,7 +1,8 @@
+
 <!doctype html>
 <html>
   <head>
-    <title>Gaussian Elimination Solver</title>
+    <title>가우시안 소거법 계산기</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -11,12 +12,12 @@
         max-width: 900px;
         margin: 0 auto;
         padding: 20px;
-        background-color: #f5f5f5;
+        background-color: #ffffff;
       }
       .container {
-        background-color: white;
+        background-color: #ffffff;
         padding: 20px;
-        border-radius: 8px;
+        border-radius: 4px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
       #inputArea {
@@ -44,7 +45,7 @@
         border-radius: 4px;
         cursor: pointer;
         transition: all 0.3s ease;
-        background-color: #4caf50;
+        background-color: #5e4caf;
         color: white;
       }
       button:disabled {
@@ -52,7 +53,7 @@
         cursor: not-allowed;
       }
       button:hover:not(:disabled) {
-        background-color: #45a049;
+        background-color: #543888;
       }
       #stepDisplay {
         margin-top: 20px;
@@ -69,7 +70,7 @@
       .explanation {
         margin: 15px 0;
         padding: 10px;
-        background-color: #f8f9fa;
+        background-color: #e2e2e2;
         border-left: 4px solid #4caf50;
       }
       .matrix-display {
@@ -109,7 +110,7 @@
       }
       .input-rules {
         font-size: 0.9em;
-        color: #666;
+        color: #4b4b4b;
         margin: 10px 0;
         padding: 10px;
         background-color: #f8f9fa;
@@ -127,8 +128,8 @@
         text-align: center;
         margin-top: 40px;
         padding: 20px;
-        background-color: white;
-        border-radius: 8px;
+        background-color: rgb(250, 250, 250);
+        border-radius: 4px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
       .footer .icons {
@@ -160,8 +161,8 @@
       <div class="info-box">
         <h3>가우시안 소거법이란?</h3>
         <p>
-          가우시안 소거법은 연립방정식을 풀기 위한 단계적인 방법입니다. 주요
-          단계는 다음과 같습니다:
+          가우시안 소거법은 미지수가 여러 개인 연립방정식을 풀기 위한 절차적 알고리즘입니다. 주요
+          단계는 아래와 같습니다:
         </p>
         <ol>
           <li>연립방정식을 행렬 형태로 변환합니다.</li>
