@@ -423,6 +423,34 @@
         .detail-time { font-weight: 600; color: var(--text); display: block; margin-bottom: 4px; }
         .detail-source { font-size: 12px; color: var(--text-light); background: #f3f4f6; padding: 2px 6px; border-radius: 4px; }
 
+        /* Matrix Table Styles */
+        .matrix-container { overflow-x: auto; max-height: 600px; border: 1px solid var(--border); border-radius: 8px; }
+        .matrix-table { width: 100%; border-collapse: collapse; white-space: nowrap; font-size: 13px; text-align: center; }
+        .matrix-table th, .matrix-table td { border: 1px solid #e5e7eb; padding: 8px 12px; color: var(--text); }
+        .matrix-table thead th { background: #f9fafb; position: sticky; top: 0; z-index: 10; font-weight: 700; color: var(--text-light); }
+        .matrix-table tbody th { background: #f9fafb; position: sticky; left: 0; z-index: 5; font-weight: 600; text-align: left; color: var(--text); }
+        
+        /* 합계 강조 스타일 (깔끔한 톤) */
+        .matrix-table .total-cell { background: #eef2ff; color: var(--primary-dark); font-weight: 700; }
+        .matrix-table tr:last-child td, .matrix-table tr:last-child th { 
+            background: #eef2ff; color: var(--primary-dark); font-weight: 700; position: sticky; bottom: 0; z-index: 10; border-top: 2px solid #c7d2fe;
+        }
+        
+        /* 왼쪽 상단 고정 (교차점) */
+        .matrix-table thead th:first-child { position: sticky; left: 0; z-index: 20; border-right: 2px solid #e5e7eb; background: #f3f4f6; }
+        /* 마지막 컬럼(합계) 스타일 */
+        .matrix-table td:last-child, .matrix-table th:last-child { border-left: 2px solid #e5e7eb; }
+
+        /* Viewer Sub Tabs */
+        .viewer-controls-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .viewer-sub-tabs { display: flex; gap: 4px; background: #f3f4f6; padding: 4px; border-radius: 8px; }
+        .sub-tab-btn {
+            border: none; background: none; padding: 6px 12px; font-size: 13px; font-weight: 600; color: #6b7280; 
+            cursor: pointer; border-radius: 6px; transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+        }
+        .sub-tab-btn:hover { color: var(--text); }
+        .sub-tab-btn.active { background: white; color: var(--primary); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+
         /* Blur Settings CSS */
         body.blur-global-star #val-star,
         body.blur-global-star #val-star-total { filter: blur(12px); user-select: none; }
@@ -700,18 +728,39 @@
         </div>
 
         <div id="tab-viewer" class="tab-content">
-            <div style="margin-bottom:10px; color:#666; font-size:13px;">
-                * 닉네임 가나다순 정렬 | 제외 필터 적용됨 | 순위/금액 숨김
+            <div class="viewer-controls-header">
+                <div style="color:#666; font-size:13px;">
+                    <i class="fas fa-info-circle"></i> 닉네임 가나다순 정렬 | 제외 필터 적용됨 | 순위/금액 숨김
+                </div>
+                <div class="viewer-sub-tabs">
+                    <button class="sub-tab-btn active" onclick="switchViewerMode('list', this)">
+                        <i class="fas fa-list"></i> 목록형
+                    </button>
+                    <button class="sub-tab-btn" onclick="switchViewerMode('matrix', this)">
+                        <i class="fas fa-th"></i> 집계표형
+                    </button>
+                </div>
             </div>
-            <table id="table-viewer" class="display" style="width:100%">
-                <thead>
-                    <tr>
-                        <th width="20%">참여자</th>
-                        <th>당첨 목록</th>
-                        <th>닉네임(숨김)</th> </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+
+            <div id="viewer-view-list">
+                <table id="table-viewer" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th width="20%">참여자</th>
+                            <th>당첨 목록</th>
+                            <th>닉네임(숨김)</th> </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div id="viewer-view-matrix" style="display:none;">
+                <div class="matrix-container">
+                    <table id="matrix-table" class="matrix-table">
+                        <!-- JS로 동적 생성 -->
+                    </table>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -1124,6 +1173,7 @@
 
         updateTables(data, excludeList);
         updateChart(data);
+        updateMatrix(data, excludeList);
     }
 
     function updateTables(data, excludeList) {
@@ -1271,6 +1321,85 @@
             ];
         });
         drawTable('#table-detail', detailRows, [1, 'desc']);
+    }
+
+    function updateMatrix(data, excludeList) {
+        const tableEl = document.getElementById('matrix-table');
+        // 매칭 성공한 데이터만 필터링
+        const validData = data.filter(d => d.status === 'success');
+        
+        if (validData.length === 0) {
+            tableEl.innerHTML = '<tbody><tr><td style="padding:20px;">데이터가 없습니다.</td></tr></tbody>';
+            return;
+        }
+
+        // 1. 데이터 집계 준비
+        const userSet = new Set();
+        const itemSet = new Set();
+        const counts = {}; // Key: "nick|item", Value: count
+
+        validData.forEach(d => {
+            const nick = d.r.nick;
+            const item = d.r.result;
+
+            // 제외 키워드 필터링 적용 (뷰어 탭 전용)
+            if (excludeList && excludeList.some(ex => item.includes(ex))) {
+                return; 
+            }
+
+            userSet.add(nick);
+            itemSet.add(item);
+            
+            const key = `${nick}|${item}`;
+            counts[key] = (counts[key] || 0) + 1;
+        });
+
+        // 정렬 (유저는 가나다순, 아이템도 가나다순 혹은 빈도순)
+        const users = Array.from(userSet).sort();
+        const items = Array.from(itemSet).sort();
+
+        // 2. HTML 생성
+        let html = '<thead><tr><th>상품명 \\ 닉네임</th>';
+        
+        // 헤더 (유저 목록)
+        users.forEach(u => {
+            html += `<th>${u}</th>`;
+        });
+        html += '<th class="total-cell">합계</th></tr></thead><tbody>';
+
+        // 바디 (아이템별 행)
+        const colTotals = new Array(users.length).fill(0); // 열 합계 계산용
+        let grandTotal = 0;
+
+        items.forEach(item => {
+            html += `<tr><th>${item}</th>`; // 첫 컬럼은 상품명
+            
+            let rowTotal = 0;
+            users.forEach((user, uIdx) => {
+                const key = `${user}|${item}`;
+                const val = counts[key] || 0;
+                
+                if (val > 0) {
+                    colTotals[uIdx] += val;
+                    rowTotal += val;
+                    html += `<td>${val}</td>`;
+                } else {
+                    html += `<td></td>`; // 0은 빈칸으로 표시 (가독성 위해)
+                }
+            });
+
+            grandTotal += rowTotal;
+            html += `<td class="total-cell">${rowTotal}</td></tr>`; // 행 합계
+        });
+
+        // 푸터 (총합 행)
+        html += '<tr><th>총합</th>';
+        colTotals.forEach(t => {
+            html += `<td>${t > 0 ? t : ''}</td>`;
+        });
+        html += `<td class="total-cell">${grandTotal}</td></tr></tbody>`;
+
+        tableEl.innerHTML = html;
     }
 
     let chartInstances = {};
@@ -1429,6 +1558,19 @@
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         event.target.classList.add('active');
+    };
+
+    window.switchViewerMode = function(mode, btn) {
+        document.querySelectorAll('.sub-tab-btn').forEach(el => el.classList.remove('active'));
+        btn.classList.add('active');
+
+        if (mode === 'list') {
+            document.getElementById('viewer-view-list').style.display = 'block';
+            document.getElementById('viewer-view-matrix').style.display = 'none';
+        } else {
+            document.getElementById('viewer-view-list').style.display = 'none';
+            document.getElementById('viewer-view-matrix').style.display = 'block';
+        }
     };
 
     // 방송용 뷰어 클릭 이벤트 (제외 키워드 추가)
